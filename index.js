@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const TOML = require('smol-toml');
-const convver = require('convver');
+const convver = require('@jmcmahon1999/convver');
 
 module.exports = {
   name: "packwiz",
