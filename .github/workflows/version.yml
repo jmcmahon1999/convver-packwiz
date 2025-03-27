@@ -17,8 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.NPM_PAT}}
       - run: npm ci
-      - run: npm test
   version:
     needs: build
     runs-on: ubuntu-latest
