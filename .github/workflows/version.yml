@@ -49,7 +49,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.NPM_PAT }}
           tag: ${{ steps.convver-update.outputs.tag }}
         run: |
-          gh release create \
+          gh release create "$tag" \
             --repo="$GITHUB_REPOSITORY" \
             --title="${tag#v}" \
             --generate-notes
