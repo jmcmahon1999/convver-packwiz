@@ -40,7 +40,7 @@ jobs:
         id: convver-update
         run: convver update npm -q
       - id: convver-current
-        run: echo "tag=v$( convver current)" >> $GITHUB_OUTPUT
+        run: echo "tag='v$( convver current)'" >> $GITHUB_OUTPUT
       - name: Push Changes
         if: steps.convver-current.outcome == 'success'
         run: git push --follow-tags
