@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const TOML = require('smol-toml');
-const convver = require('@jmcmahon1999/convver');
 
 module.exports = {
   name: "packwiz",
@@ -17,7 +16,7 @@ module.exports = {
   },
   async version() {
     const project = await this.read();
-    return convver.api.verifyVersion(project.version);
+    return project.version;
   },
   async update(version) {
     const project = await this.read();
