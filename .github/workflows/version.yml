@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 20
       - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.NPM_PAT}}
-      - run: npm ci
+      - run: npm ci --@jmcmahon1999:registry=https://npm.pkg.github.com/
   version:
     needs: build
     runs-on: ubuntu-latest
