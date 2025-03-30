@@ -38,18 +38,16 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Convver Update
         id: convver-update
-        run: convver update npm -q
-      - id: convver-current
-        run: echo "tag='v$( convver current)'" >> $GITHUB_OUTPUT
+        run: echo "tag=$( convver update npm -q)" >> $GITHUB_OUTPUT
       - name: Push Changes
-        if: steps.convver-current.outcome == 'success'
+        if: steps.convver-update.outcome == 'success'
         run: git push --follow-tags
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.NPM_PAT }}
           tag: ${{ steps.convver-update.outputs.tag }}
         run: |
-          gh release create "${tag#v}" \
+          gh release create ${tag/#/v} \
             --repo="$GITHUB_REPOSITORY" \
             --title="${tag#v}" \
             --generate-notes
