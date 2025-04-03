@@ -53,5 +53,4 @@ jobs:
             --repo="$GITHUB_REPOSITORY" \
             --title="${tag#v}" \
             --generate-notes
-            --fail-on-no-commits
             --verify-tag
