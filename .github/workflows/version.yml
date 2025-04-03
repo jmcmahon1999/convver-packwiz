@@ -39,7 +39,7 @@ jobs:
       - name: Convver Update
         id: convver-update
         run: |
-          tag=$( convver update packwiz -q) || exit 1
+          tag=$( convver update npm -q) || exit 1
           echo "tag=$tag" >> $GITHUB_OUTPUT
       - name: Push Changes
         if: steps.convver-update.outcome == 'success'
