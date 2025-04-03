@@ -7,7 +7,7 @@ module.exports = {
   description: "plugin for packwiz projects",
   file: "pack.toml",
   async read() {
-    const data = fs.readFileSync(path.resolve(this.file));
+    const data = fs.readFileSync(path.join(process.cwd(), this.file));
     if (data) {
         return TOML.parse(data.toString())
     } else {
@@ -21,6 +21,6 @@ module.exports = {
   async update(version) {
     const project = await this.read();
     project.version = version;
-    fs.writeFileSync(path.resolve(this.file), TOML.stringify(project));
+    fs.writeFileSync(path.join(process.cwd(), this.file), TOML.stringify(project));
   },
 };
