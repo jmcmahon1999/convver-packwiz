@@ -38,7 +38,9 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Convver Update
         id: convver-update
-        run: echo "tag=$( convver update npm -q)" >> $GITHUB_OUTPUT
+        run: |
+          tag=$( convver update npm -q) || exit 1
+          echo "tag=$tag" >> $GITHUB_OUTPUT
       - name: Push Changes
         if: steps.convver-update.outcome == 'success'
         run: git push --follow-tags
@@ -51,3 +53,5 @@ jobs:
             --repo="$GITHUB_REPOSITORY" \
             --title="${tag#v}" \
             --generate-notes
+            --fail-on-no-commits
+            --verify-tag
