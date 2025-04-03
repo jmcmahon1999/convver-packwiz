@@ -52,5 +52,6 @@ jobs:
           gh release create ${tag/#/v} \
             --repo="$GITHUB_REPOSITORY" \
             --title="${tag#v}" \
-            --generate-notes
+            --generate-notes \
+            --fail-on-no-commits \
             --verify-tag
