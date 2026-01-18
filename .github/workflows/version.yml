@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.NPM_PAT}}
+      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.CONVVER_PAT}}
       - run: npm ci --@jmcmahon1999:registry=https://npm.pkg.github.com/
   version:
     needs: build
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.NPM_PAT}}
+      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.CONVVER_PAT}}
       - run: npm install -g @jmcmahon1999/convver --@jmcmahon1999:registry=https://npm.pkg.github.com/
       - name: Set Credentials
         run: |
@@ -46,7 +46,7 @@ jobs:
         run: git push --follow-tags
       - name: Create release
         env:
-          GITHUB_TOKEN: ${{ secrets.NPM_PAT }}
+          GITHUB_TOKEN: ${{ secrets.CONVVER_PAT }}
           tag: ${{ steps.convver-update.outputs.tag }}
         run: |
           gh release create ${tag/#/v} \
