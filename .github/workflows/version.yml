@@ -20,7 +20,6 @@ jobs:
       - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.CONVVER_PAT}}
       - run: npm ci --@jmcmahon1999:registry=https://npm.pkg.github.com/
   version:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,12 +29,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.CONVVER_PAT}}
-      - run: npm install -g @jmcmahon1999/convver --@jmcmahon1999:registry=https://npm.pkg.github.com/
       - name: Set Credentials
         run: |
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - run: npm set "//npm.pkg.github.com/:_authToken" ${{secrets.CONVVER_PAT}}
+      - run: npm install -g @jmcmahon1999/convver --@jmcmahon1999:registry=https://npm.pkg.github.com/
+        env:
+          GITHUB_TOKEN: ${{ secrets.CONVVER_PAT }}
       - name: Convver Update
         id: convver-update
         run: |
