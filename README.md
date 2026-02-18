@@ -2,8 +2,33 @@
 
 A plugin for [convver](https://github.com/jmcmahon1999/convver) to add support for [packwiz](https://packwiz.infra.link/)
 
-Example Usage:
+See the convver [README](https://github.com/jmcmahon1999/convver/blob/master/README.md) for more detailed instructions.
 
+## Usage
+
+Command line:
+
+```sh
+# Query local pack.toml file.
+convver local packwiz # 1.2.3
+
+# Update local pack.toml file.
+convver update packwiz # 1.2.4
+```
+
+As a node module:
+
+```js
+const convver = require('convver');
+
+// Query local pack.toml file.
+convver.local('packwiz'); // 1.2.3
+
+// Update local pack.toml file.
+convver.update('packwiz');
+```
+
+Example GitHub Actions workflow:
 ```yaml
 name: Automatic Versioning
 
@@ -16,8 +41,6 @@ on:
 jobs:
   version:
     runs-on: ubuntu-latest
-    outputs:
-        TAG: ${{ steps.convver-version.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,61 +57,11 @@ jobs:
           npm install -g @jmcmahon1999/convver --@jmcmahon1999:registry=https://npm.pkg.github.com/
           npm install -g @jmcmahon1999/convver-packwiz --@jmcmahon1999:registry=https://npm.pkg.github.com/
         env:
-          GITHUB_TOKEN: ${{ secrets.CONVVER_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Convver Update
         id: convver-update
         run: convver update npm -q
-      - name: Get New Version
-        id: convver-version
-        run: echo "tag=$( convver current npm)" >> $GITHUB_OUTPUT
       - name: Push Changes
         if: steps.convver-update.outcome == 'success'
         run: git push --follow-tags
-  build:
-    needs: version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-      - uses: actions/setup-go@v6
-        with:
-          go-version: 1.23
-      - run: go install github.com/packwiz/packwiz@latest
-      # ---
-      # Build distributions with the updated version.
-      # - e.g. packwiz refresh --build; packwiz modrinth export;
-      # -
-      # ---
-      uses: actions/upload-artifact@v5
-        with:
-          name: build-$TAG
-          path: ./path/to/build/*
-  release:
-    needs: [version, build]
-    runs-on: ubuntu-latest
-    env:
-        TAG: ${{ needs.version.outputs.tag }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-      - name: Download Artifacts
-        uses: actions/download-artifact@v7
-        with:
-            name: build-$TAG
-            path: ./path/to/build/
-      - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.CONVVER_PAT }}
-        run: |
-          gh release create ${TAG/#/v} \
-            './path/to/build/*.mrpack' \
-            --repo="$GITHUB_REPOSITORY" \
-            --title="${TAG#v}" \
-            --generate-notes \
-            --fail-on-no-commits \
-            --verify-tag
 ```
